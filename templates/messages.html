@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback Messages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .feedback-link {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 200px;
+            text-align: center;
+        }
+
+        .qr-code {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .qr-code img {
+            max-width: 150px;
+            width: 100%;
+            height: auto;
+        }
+
+        .message {
+            border: 1px solid #ddd;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 5px;
+            word-wrap: break-word;
+        }
+
+        /* Media Queries for responsive design */
+        @media screen and (min-width: 768px) {
+            body {
+                padding: 20px;
+                max-width: 800px;
+            }
+
+            .header {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .feedback-link {
+                width: auto;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .qr-code img {
+                max-width: 200px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1a1a1a;
+                color: #ffffff;
+            }
+
+            .message {
+                border-color: #444;
+                background-color: #2a2a2a;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="qr-code">
+        <h3>Scan to submit feedback:</h3>
+        <img src="{{ url_for('static', filename='feedback_qr.png') }}" alt="Feedback QR Code">
+    </div>
+
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function updateMessages() {
+            fetch('/messages')
+                .then(response => response.json())
+                .then(messages => {
+                    const messagesDiv = document.querySelector('.messages');
+                    messagesDiv.innerHTML = messages.map(message => 
+                        `<div class="message">${message}</div>`
+                    ).join('');
+                })
+                .catch(error => console.error('Error fetching messages:', error));
+        }
+        
+        // Update messages initially and every 2 seconds
+        updateMessages();
+        setInterval(updateMessages, 2000);
+    </script>
+</body>
+</html>

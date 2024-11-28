@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            padding: 16px;
+            background-color: #f5f5f5;
+        }
+
+        .flash-message {
+            padding: 12px;
+            margin: 8px 0;
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            color: #155724;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .feedback-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1a1a1a;
+                color: #fff;
+            }
+
+            .form-container {
+                background-color: #2d2d2d;
+            }
+
+            h2 {
+                color: #fff;
+            }
+
+            textarea {
+                background-color: #3d3d3d;
+                color: #fff;
+                border-color: #4d4d4d;
+            }
+
+            textarea::placeholder {
+                color: #aaa;
+            }
+
+            .flash-message {
+                background-color: #1e4620;
+                color: #98c699;
+                border-left-color: #28a745;
+            }
+        }
+
+        /* Mobile-specific optimizations */
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+
+            .form-container {
+                padding: 16px;
+                margin: 0;
+                border-radius: 8px;
+            }
+
+            h2 {
+                font-size: 1.25rem;
+            }
+
+            textarea {
+                min-height: 100px;
+                font-size: 16px; /* Prevents iOS zoom on focus */
+            }
+
+            button {
+                padding: 14px 20px; /* Larger touch target */
+                width: 100%; /* Full width on mobile */
+            }
+        }
+
+        /* Ensure proper display on landscape orientation */
+        @media (max-height: 480px) and (orientation: landscape) {
+            .form-container {
+                max-width: 100%;
+                margin: 0;
+            }
+
+            textarea {
+                min-height: 80px;
+            }
+        }
+
+        /* Add safe area insets support for notched devices */
+        @supports(padding: max(0px)) {
+            body {
+                padding-left: max(16px, env(safe-area-inset-left));
+                padding-right: max(16px, env(safe-area-inset-right));
+                padding-bottom: max(16px, env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h2>Submit Your Feedback</h2>
+        <form method="POST" class="feedback-form">
+            <textarea 
+                name="message" 
+                placeholder="Enter your feedback here..." 
+                required
+                autocomplete="off"
+                autocapitalize="sentences"
+            ></textarea>
+            <button type="submit">Submit Feedback</button>
+        </form>
+    </div>
+
+    <script>
+        // Prevent double submission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const button = this.querySelector('button');
+            if (button.disabled) {
+                e.preventDefault();
+                return false;
+            }
+            button.disabled = true;
+            button.textContent = 'Submitting...';
+        });
+
+        // Auto-resize textarea
+        const textarea = document.querySelector('textarea');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+click==8.1.7
+Flask==2.0.1
+itsdangerous==2.2.0
+Jinja2==3.1.4
+MarkupSafe==3.0.2
+Pillow
+qrcode==7.3.1
+Werkzeug==2.0.1
